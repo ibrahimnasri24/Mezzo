@@ -1,7 +1,5 @@
 import pygame as pyg
-import math
 from Utils import helpers
-from PitchDetection import pitch_detector
 
 class PitchIndicator(pyg.sprite.Sprite):
     def __init__(self, parent_surface):
@@ -40,7 +38,7 @@ class Note(pyg.sprite.Sprite):
         y_padding = 4
         self.parent_container_height = parent_surface.get_rect().height
         height = (self.parent_container_height / helpers.total_nb_notes)
-        print(note["note"])
+        
         x_start_pos = parent_surface.get_rect().width - width # should be note["start"]
         y_pos = self.parent_container_height - helpers.note_dict[note["note"]] * height
 
@@ -50,6 +48,9 @@ class Note(pyg.sprite.Sprite):
         pyg.draw.rect(self.image, (255, 255, 255), [0, 0, width, height - y_padding], radius)
         
         self.rect = self.image.get_rect()
+
+        label = helpers.text(note["note"], helpers.colors["text1"], helpers.colors["background1"], 14)
+        self.image.blit(label, (10, 10))
 
         self.rect.x = x_start_pos
         self.rect.y = y_pos

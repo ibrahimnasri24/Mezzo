@@ -1,3 +1,11 @@
+import pygame as pyg
+
+colors = {
+    "primary1": (200,200,200),
+    "text1": (200,200,200),
+    "background1": (50,50,50)
+}
+
 notes=[
     ("E2",    80),
     ("F2",    86),
@@ -84,3 +92,10 @@ def extract_note_from_pitch(pitch, note_ranges):
             if pitch > note["range"][0] and pitch < note["range"][1]:
                 return note["note"]
     return "none"
+
+
+
+def text(string, color, bgcolor, size):
+    font = pyg.font.Font('Game/Animation/assets/fonts/Roboto-Black.ttf',size)
+    text = font.render(string, True, color, bgcolor)
+    return text
