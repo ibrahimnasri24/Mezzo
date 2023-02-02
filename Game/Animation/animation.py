@@ -3,6 +3,7 @@ import pygame as pyg
 import multiprocessing
 from PitchDetection import pitch_detector
 from Animation import sprites
+from Utils import helpers
 
 class Animation:
     def __init__(self):
@@ -34,8 +35,10 @@ class Animation:
         p2.start()
 
     def main_loop(self):
+        self.note_ranges = helpers.initialize_note_ranges()
+
         while True:
-            print(self.pitch[0])
+            print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             for event in pyg.event.get():
                 if event.type == pyg.QUIT: sys.exit()
 
