@@ -12,15 +12,15 @@ class PitchIndicator(pyg.sprite.Sprite):
 
         self.target_y = self.rect.y
 
-        self.velocity_y = 12
+        self.velocity_y = 6
 
     def update(self, pitch, upper_pitch, lower_pitch):
         if pitch == 0:
-            self.target_y = (self.parent_container_height / 2) - (self.rect.width / 2)
+            pass
         else:
-            self.target_y = math.floor(self.parent_container_height * (1 - pitch / (upper_pitch - lower_pitch)))
-        if self.rect.y != self.target_y:
+            self.target_y = math.floor((self.parent_container_height - self.rect.width) * (1 - ((pitch - lower_pitch) / (upper_pitch - lower_pitch))))
+        if self.rect.y < self.target_y - self.velocity_y or self.rect.y > self.target_y + self.velocity_y:
             if self.rect.y > self.target_y:
-                self.rect.move_ip([0, self.velocity_y * -1])
+                self.rect.move_ip([0, (abs(self.rect.y - self.target_y) / 2) * -1])
             else:
-                self.rect.move_ip([0, self.velocity_y])
+                self.rect.move_ip([0, (abs(self.rect.y - self.target_y) / 2)])

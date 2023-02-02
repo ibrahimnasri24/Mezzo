@@ -38,14 +38,14 @@ class Animation:
         self.note_ranges = helpers.initialize_note_ranges()
 
         while True:
-            print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
+            # print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             for event in pyg.event.get():
                 if event.type == pyg.QUIT: sys.exit()
 
             self.screen.fill(self.black)
             self.indicator_container.fill((255,255,255))
 
-            self.pitch_indicator.update(self.pitch[0], 500, 50)
+            self.pitch_indicator.update(self.pitch[0], 410, 75)
             self.pitch_indicators.draw(self.indicator_container)
             self.screen.blit(self.indicator_container, (self.width - 100, 0))
 
