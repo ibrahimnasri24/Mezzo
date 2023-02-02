@@ -1,5 +1,7 @@
 import pygame as pyg
 import math
+from Utils import helpers
+from PitchDetection import pitch_detector
 
 class PitchIndicator(pyg.sprite.Sprite):
     def __init__(self, parent_surface):
@@ -14,13 +16,44 @@ class PitchIndicator(pyg.sprite.Sprite):
 
         self.velocity_y = 6
 
-    def update(self, pitch, upper_pitch, lower_pitch):
-        if pitch == 0:
+        self.note_height = (self.parent_container_height / helpers.total_nb_notes)
+
+    def update(self, note):
+        if note == "none":
             pass
         else:
-            self.target_y = math.floor((self.parent_container_height - self.rect.width) * (1 - ((pitch - lower_pitch) / (upper_pitch - lower_pitch))))
+            self.target_y = self.parent_container_height - (helpers.note_dict[note] * self.note_height) + (self.note_height / 2)
         if self.rect.y < self.target_y - self.velocity_y or self.rect.y > self.target_y + self.velocity_y:
             if self.rect.y > self.target_y:
                 self.rect.move_ip([0, (abs(self.rect.y - self.target_y) / 2) * -1])
             else:
                 self.rect.move_ip([0, (abs(self.rect.y - self.target_y) / 2)])
+
+
+class Note(pyg.sprite.Sprite):
+    def __init__(self, parent_surface, note):
+        pyg.sprite.Sprite.__init__(self)
+        color = (200, 200, 200)
+        radius = 5
+        base_width = 100
+        width = note["duration"] * base_width
+        y_padding = 4
+        self.parent_container_height = parent_surface.get_rect().height
+        height = (self.parent_container_height / helpers.total_nb_notes)
+        print(note["note"])
+        x_start_pos = parent_surface.get_rect().width - width # should be note["start"]
+        y_pos = self.parent_container_height - helpers.note_dict[note["note"]] * height
+
+        self.image = pyg.Surface([width, height])
+        self.image.fill(color)
+        self.image.set_colorkey(color)
+        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, width, height - y_padding], radius)
+        
+        self.rect = self.image.get_rect()
+
+        self.rect.x = x_start_pos
+        self.rect.y = y_pos
+
+    
+    def update(self):
+        pass

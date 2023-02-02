@@ -4,6 +4,7 @@ import multiprocessing
 from PitchDetection import pitch_detector
 from Animation import sprites
 from Utils import helpers
+from SheetMusic import import_xml
 
 class Animation:
     def __init__(self):
@@ -20,6 +21,14 @@ class Animation:
         self.pitch_indicator = sprites.PitchIndicator(self.indicator_container)
         self.pitch_indicators = pyg.sprite.RenderPlain()
         self.pitch_indicators.add(self.pitch_indicator)
+
+        note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/test.xml")
+        self.notes_container = pyg.Surface((self.width - 100,self.height))
+        self.notes = pyg.sprite.RenderPlain()
+        for note_obj in note_list:
+            if note_obj["note"] != "rest":
+                nt = sprites.Note(self.notes_container,note_obj)
+                self.notes.add(nt)
 
         self.pitch = [0]
 
@@ -45,9 +54,14 @@ class Animation:
             self.screen.fill(self.black)
             self.indicator_container.fill((255,255,255))
 
-            self.pitch_indicator.update(self.pitch[0], 410, 75)
+            self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             self.pitch_indicators.draw(self.indicator_container)
             self.screen.blit(self.indicator_container, (self.width - 100, 0))
+
+            self.notes_container.fill((50,50,50))
+            self.notes.update()
+            self.notes.draw(self.notes_container)
+            self.screen.blit(self.notes_container, (0, 0))
 
             pyg.display.update()
             self.FPSCLOCK.tick(60)

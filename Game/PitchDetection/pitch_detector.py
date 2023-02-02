@@ -5,6 +5,9 @@ from os import sep
 import time
 import pyaudio
 
+F0_MIN = 75
+F0_MAX = 410
+
 
 def differenceFunction_scipy(x, N, tau_max):
     x = np.array(x, np.float64)
@@ -90,5 +93,5 @@ def main(pitch_array):
 
         audio_data = np.frombuffer(data, dtype=np.int16)
 
-        pitch, harmonic_rate, argmin = my_compute(audio_data, RATE, chunk_size=CHUNK)
+        pitch, harmonic_rate, argmin = my_compute(audio_data, RATE, chunk_size=CHUNK, f0_min=F0_MIN, f0_max=F0_MAX)
         pitch_array[0] = pitch
