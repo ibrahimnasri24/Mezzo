@@ -11,7 +11,7 @@ class Logic:
     def __init__(self):
         if not hasattr(self, "_initialized"):
             self._initialized = True
-            self.reset_score()
+            self.reset()
 
     @classmethod
     def get_instance(cls):
@@ -36,9 +36,8 @@ class Logic:
 
         if self.cum_missed_notes > Logic.max_missed_notes:
             self.gameover = True
-            # self.reset_score()
 
-    def reset_score(self):
+    def reset(self):
         self.accuracy = 0
 
         self.played_notes = 0
@@ -50,4 +49,4 @@ class Logic:
         self.gameover = False
 
     def log_score(self):
-        return {"acc": self.accuracy, "hits": self.hit_notes, "misses": self.missed_notes, "cum":self.cum_missed_notes, "played":self.played_notes}
+        return {"acc": self.accuracy, "hits": self.hit_notes, "misses": self.missed_notes, "cum":self.cum_missed_notes, "played":self.played_notes, "gameover": self.gameover}

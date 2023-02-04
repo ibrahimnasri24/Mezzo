@@ -47,6 +47,13 @@ class Animation:
             )
         p2.start()
 
+
+    def draw_game_over_screen(self):
+        gameover = helpers.text('GAME OVER', helpers.colors["text1"], helpers.colors["background1"], 64)
+        gameover_rect = gameover.get_rect()
+        self.screen.blit(gameover, ((self.width / 2) - (gameover_rect.width / 2), (self.height / 2) - (gameover_rect.height / 2)))
+
+
     def main_loop(self):
         self.note_ranges = helpers.initialize_note_ranges()
 
@@ -56,22 +63,28 @@ class Animation:
             # print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             for event in pyg.event.get():
                 if event.type == pyg.QUIT: sys.exit()
+                if event.type == pyg.KEYDOWN:
+                    if self.logic.gameover:
+                        self.logic.reset()
 
             self.screen.fill(self.black)
 
 
-            notes.notes_container.fill((50,50,50))
-            notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
-            notes.notes.draw(self.notes_container)
-            self.screen.blit(self.notes_container, (0, 0))
+            if self.logic.gameover:
+                self.draw_game_over_screen()
+            else:
+                notes.notes_container.fill((50,50,50))
+                notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
+                notes.notes.draw(self.notes_container)
+                self.screen.blit(self.notes_container, (0, 0))
 
 
-            self.indicator_container.fill((255,255,255, 150))
-            self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
-            self.pitch_indicators.draw(self.indicator_container)
-            self.screen.blit(self.indicator_container, (self.width - Animation.indicator_container_width, 0))
-            
-            self.draw_score()
+                self.indicator_container.fill((255,255,255, 150))
+                self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
+                self.pitch_indicators.draw(self.indicator_container)
+                self.screen.blit(self.indicator_container, (self.width - Animation.indicator_container_width, 0))
+                
+                self.draw_score()
 
             pyg.display.update()
             self.FPSCLOCK.tick(30)
