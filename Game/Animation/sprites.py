@@ -104,8 +104,8 @@ class Note(pyg.sprite.Sprite):
         
         self.rect = self.image.get_rect()
 
-        label = helpers.text(self.note_with_octave, helpers.colors["text1"], helpers.colors["background1"], 20)
-        self.image.blit(label, (10, 10))
+        label = helpers.text(self.note_with_octave, (0,0,0), (255,255,255), 28)
+        self.image.blit(label, (5, 0))
 
         self.rect.x = x_start_pos
         self.rect.y = y_pos
