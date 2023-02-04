@@ -23,8 +23,16 @@ class Animation:
         self.pitch_indicator = sprites.PitchIndicator(self.indicator_container)
         self.pitch_indicators = pyg.sprite.RenderPlain()
         self.pitch_indicators.add(self.pitch_indicator)
+        
+        
+        self.notes_container = pyg.Surface((self.width,self.height), pyg.SRCALPHA, 32)
 
-        self.notes_container = pyg.Surface((self.width,self.height))
+
+        self.note_decorations_container = pyg.Surface((self.width,self.height))
+        self.note_decorations = pyg.sprite.RenderPlain()
+        for i in range(len(helpers.notes)):
+            note_dec = sprites.NoteDecoration(i, self.note_decorations_container)
+            self.note_decorations.add(note_dec)
 
         self.pitch = [0]
 
@@ -61,32 +69,40 @@ class Animation:
 
         notes = sprites.Notes(self.notes_container)
 
-        while True:
+        running = True
+
+        while running:
             # print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             for event in pyg.event.get():
                 if event.type == pyg.QUIT: sys.exit()
                 if event.type == pyg.KEYDOWN:
-                    if self.logic.gameover:
-                        self.logic.reset()
                     if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                         print("exiting")
                         self.pitch[1] = 0
                         self.p2.join()
+                        running = False
                         pyg.QUIT: sys.exit()
+                    elif self.logic.gameover:
+                        self.logic.reset()
 
-            self.screen.fill(self.black)
+            self.screen.fill((50,50,50))
 
 
             if self.logic.gameover:
                 self.draw_game_over_screen()
             else:
-                notes.notes_container.fill((50,50,50))
+
+                self.note_decorations_container.fill((50,50,50))
+                self.note_decorations.update()
+                self.note_decorations.draw(self.note_decorations_container)
+                self.screen.blit(self.note_decorations_container, (0,0))
+                
+                notes.notes_container.fill((0,255,0,0))
                 notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
                 notes.notes.draw(self.notes_container)
                 self.screen.blit(self.notes_container, (0, 0))
 
-
-                self.indicator_container.fill((255,255,255, 150))
+                self.indicator_container.fill((255,255,255,150))
                 self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
                 self.pitch_indicators.draw(self.indicator_container)
                 self.screen.blit(self.indicator_container, (self.width - Animation.indicator_container_width, 0))

@@ -3,7 +3,9 @@ import pygame as pyg
 colors = {
     "primary1": (200,200,200),
     "text1": (200,200,200),
-    "background1": (50,50,50)
+    "background1": (50,50,50),
+    "NoteDecOn": (90,90,90),
+    "NoteDecOff": (60,60,60),
 }
 
 notes=[

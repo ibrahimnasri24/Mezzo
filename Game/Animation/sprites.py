@@ -90,7 +90,7 @@ class Note(pyg.sprite.Sprite):
     def __init__(self, parent_surface, note):
         pyg.sprite.Sprite.__init__(self)
         color = (200, 200, 200)
-        radius = 5
+        radius = 8
         noir_base_width = 120
         duration = 0.25 if note["duration"] == 0 else note["duration"]
         self.width = duration * noir_base_width
@@ -108,7 +108,7 @@ class Note(pyg.sprite.Sprite):
         self.image = pyg.Surface([self.width, height])
         self.image.fill(color)
         self.image.set_colorkey(color)
-        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, self.width, height - y_padding])
+        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, self.width, height - y_padding], 0, radius)
         
         self.rect = self.image.get_rect()
 
@@ -150,3 +150,20 @@ class Note(pyg.sprite.Sprite):
                         Note.logic.missed_note()
                     self.finished_note = True
                     
+
+class NoteDecoration(pyg.sprite.Sprite):
+    def __init__(self, index, parent_surface):
+        pyg.sprite.Sprite.__init__(self)
+        width = parent_surface.get_rect().width
+        height = (parent_surface.get_rect().height / helpers.total_nb_notes)
+        self.image = pyg.Surface([width, height])
+        color = helpers.colors["NoteDecOn"] if index % 2 == 0 else helpers.colors["NoteDecOff"]
+        self.image.fill(color)
+        self.image.set_colorkey(color)
+        
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = index * height
+        print(index, ( self.rect.x, self.rect.y, width, height))
+
+        pyg.draw.rect(self.image, color, [0, 0, width, height])
