@@ -84,6 +84,8 @@ class Animation:
                         pyg.QUIT: sys.exit()
                     elif self.logic.gameover:
                         self.logic.reset()
+                        self.notes_container = pyg.Surface((self.width,self.height), pyg.SRCALPHA, 32)
+                        notes = sprites.Notes(self.notes_container)
 
             self.screen.fill((50,50,50))
 

@@ -36,14 +36,6 @@ class Notes():
     noir_duration = 60 / import_xml.noir_bpm
     def __init__(self, notes_container):
         self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/test.xml")
-        # print(len(self.note_list))
-        # for i, note in enumerate(self.note_list):
-        #     if note["duration"] == 0:
-        #         print("*********0 Duration note***********")
-        #         print(self.note_list[i - 1])
-        #         print(note)
-        #         print(self.note_list[i + 1])
-
         self.nb_measures_in_surface = 4
         self.note_index = 0
 
@@ -55,8 +47,8 @@ class Notes():
 
         self.last_note_start_time = 0
         self.next_note_duration = self.note_list[0]["duration"] * Notes.noir_duration
-    
-    
+
+
     def draw_next_note(self):
         if self.note_index > len(self.note_list) - 1:
             return
