@@ -2,6 +2,8 @@ import pygame as pyg
 from Utils import helpers
 from SheetMusic import import_xml
 import time
+from Animation import animation
+from Animation import logic
 
 class PitchIndicator(pyg.sprite.Sprite):
     def __init__(self, parent_surface):
@@ -33,7 +35,7 @@ class PitchIndicator(pyg.sprite.Sprite):
 class Notes():
     noir_duration = 60 / import_xml.noir_bpm
     def __init__(self, notes_container):
-        self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Fly Me To The Moon.xml")
+        self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/test.xml")
         # print(len(self.note_list))
         # for i, note in enumerate(self.note_list):
         #     if note["duration"] == 0:
@@ -56,7 +58,7 @@ class Notes():
     
     
     def draw_next_note(self):
-        if self.note_index > len(self.note_list):
+        if self.note_index > len(self.note_list) - 1:
             return
         if self.note_list[self.note_index]["note"] == "rest":
             if self.note_index != len(self.note_list) - 1:
@@ -70,10 +72,10 @@ class Notes():
             self.last_note_start_time = time.time()
 
 
-    def update(self):
+    def update(self, played_note):
         if time.time() - self.last_note_start_time > self.next_note_duration:
             self.draw_next_note()
-        self.notes.update()
+        self.notes.update(played_note)
 
 
     def kill_notes(self):
@@ -83,34 +85,68 @@ class Notes():
 
 
 class Note(pyg.sprite.Sprite):
+    logic = logic.Logic.get_instance()
+    print(logic)
     def __init__(self, parent_surface, note):
         pyg.sprite.Sprite.__init__(self)
         color = (200, 200, 200)
         radius = 5
         noir_base_width = 120
         duration = 0.25 if note["duration"] == 0 else note["duration"]
-        width = duration * noir_base_width
-        self.velocity = (width / (duration * Notes.noir_duration)) / 30
+        self.width = duration * noir_base_width
+        self.velocity = (self.width / (duration * Notes.noir_duration)) / 30
         y_padding = 4
         self.parent_container_height = parent_surface.get_rect().height
+        self.parent_container_width = parent_surface.get_rect().width
         height = (self.parent_container_height / helpers.total_nb_notes)
         
-        x_start_pos = noir_base_width * -4
-        y_pos = self.parent_container_height - helpers.note_dict[note["note"]] * height
+        self.note_with_octave = note["note"]
 
-        self.image = pyg.Surface([width, height])
+        x_start_pos = noir_base_width * -4
+        y_pos = self.parent_container_height - helpers.note_dict[self.note_with_octave] * height
+
+        self.image = pyg.Surface([self.width, height])
         self.image.fill(color)
         self.image.set_colorkey(color)
-        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, width, height - y_padding])
+        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, self.width, height - y_padding])
         
         self.rect = self.image.get_rect()
 
-        label = helpers.text(note["note"], helpers.colors["text1"], helpers.colors["background1"], 20)
+        label = helpers.text(self.note_with_octave, helpers.colors["text1"], helpers.colors["background1"], 20)
         self.image.blit(label, (10, 10))
 
         self.rect.x = x_start_pos
         self.rect.y = y_pos
+        self.inside_note = False
+        self.finished_note = False
+
+        self.max_hits_per_note = duration * Notes.noir_duration * 30
+        self.note_hit = 0
+        self.note_hite_rate = 0
 
     
-    def update(self):
+    def update(self, played_note):
         self.rect.move_ip([self.velocity, 0])
+
+        if self.rect.x + self.width > self.parent_container_width - animation.Animation.indicator_container_width:
+            if self.rect.x < self.parent_container_width - animation.Animation.indicator_container_width:
+                if not self.inside_note:
+                    # print("inside note {}".format(self.note_with_octave))
+                    # print("The played note is {}".format(played_note))
+                    print(Note.logic.log_score())
+                    self.inside_note = True
+                if helpers.note_dict[self.note_with_octave] == helpers.note_dict[played_note]:
+                    self.note_hit += 1
+            else:
+                if not self.finished_note:
+                    self.note_hite_rate = self.note_hit / self.max_hits_per_note
+                    # print("finished note {} with a hit rate of {}".format(self.note_with_octave, self.note_hite_rate))
+                    print(Note.logic.log_score())
+                    if self.note_hite_rate > 0.7:
+                        self.image.fill((0,200,0))
+                        Note.logic.hit_note()
+                    else:
+                        self.image.fill((200,0,0))
+                        Note.logic.missed_note()
+                    self.finished_note = True
+                    
