@@ -88,7 +88,7 @@ def main(pitch_array):
                 input=True,
                 frames_per_buffer=CHUNK)
 
-    while True:
+    while pitch_array[1] == 1:
         data = stream.read(CHUNK)
 
         audio_data = np.frombuffer(data, dtype=np.int16)

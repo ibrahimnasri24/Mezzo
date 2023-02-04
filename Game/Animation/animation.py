@@ -38,14 +38,16 @@ class Animation:
 
 
     def open_pitch_detector(self):
-        self.pitch = multiprocessing.Array("d", 1)
-        p2 = multiprocessing.Process(
+        self.pitch = multiprocessing.Array("d", 2)
+        self.pitch[0] = 0
+        self.pitch[1] = 1
+        self.p2 = multiprocessing.Process(
                 target=pitch_detector.main,
                 args=(
                     self.pitch,
                 ),
             )
-        p2.start()
+        self.p2.start()
 
 
     def draw_game_over_screen(self):
@@ -66,6 +68,11 @@ class Animation:
                 if event.type == pyg.KEYDOWN:
                     if self.logic.gameover:
                         self.logic.reset()
+                    if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
+                        print("exiting")
+                        self.pitch[1] = 0
+                        self.p2.join()
+                        pyg.QUIT: sys.exit()
 
             self.screen.fill(self.black)
 
