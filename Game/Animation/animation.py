@@ -22,13 +22,18 @@ class Animation:
         self.pitch_indicators = pyg.sprite.RenderPlain()
         self.pitch_indicators.add(self.pitch_indicator)
 
-        note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/test.xml")
         self.notes_container = pyg.Surface((self.width - 100,self.height))
-        self.notes = pyg.sprite.RenderPlain()
-        for note_obj in note_list:
-            if note_obj["note"] != "rest":
-                nt = sprites.Note(self.notes_container,note_obj)
-                self.notes.add(nt)
+
+        # self.nb_measures_in_surface = 4
+        # self.note_index = 0
+
+        # for note_obj in self.note_list:
+        #     if note_obj["measure_Nb"] > self.nb_measures_in_surface:
+        #         break
+        #     if note_obj["note"] != "rest":
+        #         nt = sprites.Note(self.notes_container,note_obj)
+        #         self.notes.add(nt)
+        #         self.note_index += 1
 
         self.pitch = [0]
 
@@ -46,6 +51,8 @@ class Animation:
     def main_loop(self):
         self.note_ranges = helpers.initialize_note_ranges()
 
+        notes = sprites.Notes(self.notes_container)
+
         while True:
             # print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
             for event in pyg.event.get():
@@ -58,13 +65,15 @@ class Animation:
             self.pitch_indicators.draw(self.indicator_container)
             self.screen.blit(self.indicator_container, (self.width - 100, 0))
 
-            self.notes_container.fill((50,50,50))
-            self.notes.update()
-            self.notes.draw(self.notes_container)
+            notes.notes_container.fill((50,50,50))
+            notes.update()
+            notes.notes.draw(self.notes_container)
             self.screen.blit(self.notes_container, (0, 0))
 
+            # self.kill_notes()
+
             pyg.display.update()
-            self.FPSCLOCK.tick(60)
+            self.FPSCLOCK.tick(30)
 
     def start_anim(self):
         self.open_pitch_detector()
