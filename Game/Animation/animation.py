@@ -63,6 +63,12 @@ class Animation:
         gameover_rect = gameover.get_rect()
         self.screen.blit(gameover, ((self.width / 2) - (gameover_rect.width / 2), (self.height / 2) - (gameover_rect.height / 2)))
 
+    
+    def draw_currently_played_note(self):
+        cur_played_note_text = helpers.text("Played Note: " + helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges), helpers.colors["text1"], helpers.colors["background1"], 32)
+        cur_played_note_text_rect = cur_played_note_text.get_rect()
+        self.screen.blit(cur_played_note_text, (300,10))
+
 
     def main_loop(self):
         self.note_ranges = helpers.initialize_note_ranges()
@@ -109,6 +115,7 @@ class Animation:
                 self.pitch_indicators.draw(self.indicator_container)
                 self.screen.blit(self.indicator_container, (self.width - Animation.indicator_container_width, 0))
                 
+                self.draw_currently_played_note()
                 self.draw_score()
 
             pyg.display.update()

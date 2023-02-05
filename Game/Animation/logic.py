@@ -34,8 +34,8 @@ class Logic:
 
         self.cum_missed_notes += 1
 
-        if self.cum_missed_notes > Logic.max_missed_notes:
-            self.gameover = True
+        # if self.cum_missed_notes > Logic.max_missed_notes:
+        #     self.gameover = True
 
     def reset(self):
         self.accuracy = 0

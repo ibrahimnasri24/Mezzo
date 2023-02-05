@@ -35,7 +35,7 @@ class PitchIndicator(pyg.sprite.Sprite):
 class Notes():
     noir_duration = 60 / import_xml.noir_bpm
     def __init__(self, notes_container):
-        self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/test.xml")
+        self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Fly Me To The Moon.xml")
         self.nb_measures_in_surface = 4
         self.note_index = 0
 
