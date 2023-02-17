@@ -170,8 +170,8 @@ class NoteDecoration(pyg.sprite.Sprite):
     def __init__(self, index, note, parent_surface):
         pyg.sprite.Sprite.__init__(self)
         width = parent_surface.get_rect().width
-        height = (parent_surface.get_rect().height / helpers.total_nb_notes) + 5
-        self.image = pyg.Surface([width, height])
+        height = (parent_surface.get_rect().height / helpers.total_nb_notes)
+        self.image = pyg.Surface([width, height + 1])
         if len(note[0]) > 2:
             self.color = (50,50,50)
         else:
@@ -183,8 +183,8 @@ class NoteDecoration(pyg.sprite.Sprite):
         
         self.rect = self.image.get_rect()
         self.rect.x = 0
-        self.rect.y = index * (height - 5)
+        self.rect.y = index * (height) - 2
         # print(index, ( self.rect.x, self.rect.y, width, height))
 
-        pyg.draw.rect(self.image, self.color, [0, 0, width, height])
+        pyg.draw.rect(self.image, self.color, [0, 0, width, height + 1])
         self.image.blit(label, (20, 5))
