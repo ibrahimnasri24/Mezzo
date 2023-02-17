@@ -50,10 +50,10 @@ class Notes():
                 note["start"] = start
                 note["duration"] += cum_dur
                 cum_dur = 0
-                print(note)
+                # print(note)
                 self.note_list.append(note)
             else:
-                print(note)
+                # print(note)
                 self.note_list.append(note)
 
 
@@ -137,7 +137,7 @@ class Note(pyg.sprite.Sprite):
         self.note_hit = 0
         self.note_hite_rate = 0
 
-        print({"note":self.note_with_octave, "y_pos": y_pos, "note_dict_pos": helpers.note_dict[self.note_with_octave], "x": x_start_pos, "width": self.width})
+        # print({"note":self.note_with_octave, "y_pos": y_pos, "note_dict_pos": helpers.note_dict[self.note_with_octave], "x": x_start_pos, "width": self.width})
 
     
     def update(self, played_note):
@@ -167,18 +167,24 @@ class Note(pyg.sprite.Sprite):
                     
 
 class NoteDecoration(pyg.sprite.Sprite):
-    def __init__(self, index, parent_surface):
+    def __init__(self, index, note, parent_surface):
         pyg.sprite.Sprite.__init__(self)
         width = parent_surface.get_rect().width
-        height = (parent_surface.get_rect().height / helpers.total_nb_notes)
+        height = (parent_surface.get_rect().height / helpers.total_nb_notes) + 5
         self.image = pyg.Surface([width, height])
-        color = helpers.colors["NoteDecOn"] if index % 2 == 0 else helpers.colors["NoteDecOff"]
-        self.image.fill(color)
-        self.image.set_colorkey(color)
+        if len(note[0]) > 2:
+            self.color = (50,50,50)
+        else:
+            self.color = (60,60,60)
+        # self.image.fill(self.color)
+        # self.image.set_colorkey(self.color)
+
+        label = helpers.text(note[0], (255,255,255), self.color, 25)
         
         self.rect = self.image.get_rect()
         self.rect.x = 0
-        self.rect.y = index * height
+        self.rect.y = index * (height - 5)
         # print(index, ( self.rect.x, self.rect.y, width, height))
 
-        pyg.draw.rect(self.image, color, [0, 0, width, height])
+        pyg.draw.rect(self.image, self.color, [0, 0, width, height])
+        self.image.blit(label, (20, 5))

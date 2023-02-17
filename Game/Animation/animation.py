@@ -30,8 +30,8 @@ class Animation:
 
         self.note_decorations_container = pyg.Surface((self.width,self.height))
         self.note_decorations = pyg.sprite.RenderPlain()
-        for i in range(len(helpers.notes)):
-            note_dec = sprites.NoteDecoration(i, self.note_decorations_container)
+        for i, note in enumerate(reversed(helpers.notes)):
+            note_dec = sprites.NoteDecoration(i, note, self.note_decorations_container)
             self.note_decorations.add(note_dec)
 
         self.pitch = [0]
@@ -41,7 +41,7 @@ class Animation:
 
     def draw_score(self):
         accuracy = helpers.text('Accuracy: {0:.3g}%'.format(self.logic.accuracy), helpers.colors["text1"], helpers.colors["background1"], 32)
-        self.screen.blit(accuracy, (10, 10))
+        self.screen.blit(accuracy, (50, 10))
 
 
 
@@ -67,7 +67,7 @@ class Animation:
     def draw_currently_played_note(self):
         cur_played_note_text = helpers.text("Played Note: " + helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges), helpers.colors["text1"], helpers.colors["background1"], 32)
         cur_played_note_text_rect = cur_played_note_text.get_rect()
-        self.screen.blit(cur_played_note_text, (300,10))
+        self.screen.blit(cur_played_note_text, (340,10))
 
 
     def main_loop(self):
