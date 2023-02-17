@@ -35,7 +35,28 @@ class PitchIndicator(pyg.sprite.Sprite):
 class Notes():
     noir_duration = 60 / import_xml.noir_bpm
     def __init__(self, notes_container):
-        self.note_list = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Fly Me To The Moon.xml")
+        notes = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Mawtini_(trmb.).xml")
+        
+        self.note_list = []
+        start = 0
+        cum_dur = 0
+        for i, note in enumerate(notes):
+            if note["tie"] == 'start':
+                start = note["start"]
+                cum_dur += note["duration"]
+            elif note["tie"] == 'continue':
+                cum_dur += note["duration"]
+            elif note["tie"] == 'stop':
+                note["start"] = start
+                note["duration"] += cum_dur
+                cum_dur = 0
+                print(note)
+                self.note_list.append(note)
+            else:
+                print(note)
+                self.note_list.append(note)
+
+
         self.nb_measures_in_surface = 4
         self.note_index = 0
 
@@ -43,7 +64,7 @@ class Notes():
 
         self.notes_container = notes_container
 
-        self.draw_next_note()
+        # self.draw_next_note()
 
         self.last_note_start_time = 0
         self.next_note_duration = self.note_list[0]["duration"] * Notes.noir_duration
@@ -65,7 +86,7 @@ class Notes():
 
 
     def update(self, played_note):
-        if time.time() - self.last_note_start_time > self.next_note_duration:
+        if time.time() - self.last_note_start_time > self.next_note_duration + 0.1:
             self.draw_next_note()
         self.notes.update(played_note)
 
@@ -78,15 +99,15 @@ class Notes():
 
 class Note(pyg.sprite.Sprite):
     logic = logic.Logic.get_instance()
-    print(logic)
+    # print(logic)
     def __init__(self, parent_surface, note):
         pyg.sprite.Sprite.__init__(self)
         color = (200, 200, 200)
         radius = 8
         noir_base_width = 120
         duration = 0.25 if note["duration"] == 0 else note["duration"]
-        self.width = duration * noir_base_width
-        self.velocity = (self.width / (duration * Notes.noir_duration)) / 30
+        self.width = 0.95 * duration * noir_base_width if duration >= 4 else duration * noir_base_width
+        self.velocity = (duration * noir_base_width / (duration * Notes.noir_duration)) / 30
         y_padding = 4
         self.parent_container_height = parent_surface.get_rect().height
         self.parent_container_width = parent_surface.get_rect().width
@@ -116,6 +137,8 @@ class Note(pyg.sprite.Sprite):
         self.note_hit = 0
         self.note_hite_rate = 0
 
+        print({"note":self.note_with_octave, "y_pos": y_pos, "note_dict_pos": helpers.note_dict[self.note_with_octave], "x": x_start_pos, "width": self.width})
+
     
     def update(self, played_note):
         self.rect.move_ip([self.velocity, 0])
@@ -125,7 +148,7 @@ class Note(pyg.sprite.Sprite):
                 if not self.inside_note:
                     # print("inside note {}".format(self.note_with_octave))
                     # print("The played note is {}".format(played_note))
-                    print(Note.logic.log_score())
+                    # print(Note.logic.log_score())
                     self.inside_note = True
                 if helpers.note_dict[self.note_with_octave] == helpers.note_dict[played_note]:
                     self.note_hit += 1
@@ -133,8 +156,8 @@ class Note(pyg.sprite.Sprite):
                 if not self.finished_note:
                     self.note_hite_rate = self.note_hit / self.max_hits_per_note
                     # print("finished note {} with a hit rate of {}".format(self.note_with_octave, self.note_hite_rate))
-                    print(Note.logic.log_score())
-                    if self.note_hite_rate > 0.7:
+                    # print(Note.logic.log_score())
+                    if self.note_hite_rate > 0.5:
                         self.image.fill((0,200,0))
                         Note.logic.hit_note()
                     else:
@@ -156,6 +179,6 @@ class NoteDecoration(pyg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = index * height
-        print(index, ( self.rect.x, self.rect.y, width, height))
+        # print(index, ( self.rect.x, self.rect.y, width, height))
 
         pyg.draw.rect(self.image, color, [0, 0, width, height])
