@@ -24,7 +24,7 @@ class PitchIndicator(pyg.sprite.Sprite):
         if note == "none":
             pass
         else:
-            self.target_y = self.parent_container_height - (helpers.note_dict[note] * self.note_height) + (self.note_height / 2)
+            self.target_y = self.parent_container_height - ((helpers.note_dict[note] + 2) * self.note_height) + (self.note_height / 2)
         if self.rect.y < self.target_y - self.velocity_y or self.rect.y > self.target_y + self.velocity_y:
             if self.rect.y > self.target_y:
                 self.rect.move_ip([0, (abs(self.rect.y - self.target_y) / 2) * -1])
@@ -116,7 +116,7 @@ class Note(pyg.sprite.Sprite):
         self.note_with_octave = note["note"]
 
         x_start_pos = noir_base_width * -4
-        y_pos = self.parent_container_height - helpers.note_dict[self.note_with_octave] * height
+        y_pos = self.parent_container_height - (helpers.note_dict[self.note_with_octave] + 1) * height
 
         self.image = pyg.Surface([self.width, height])
         self.image.fill(color)
@@ -179,7 +179,7 @@ class NoteDecoration(pyg.sprite.Sprite):
         # self.image.fill(self.color)
         # self.image.set_colorkey(self.color)
 
-        label = helpers.text(note[0], (255,255,255), self.color, 25)
+        label = helpers.text(note[0], (150,150,150), self.color, 25)
         
         self.rect = self.image.get_rect()
         self.rect.x = 0
