@@ -10,7 +10,7 @@ class PitchIndicator(pyg.sprite.Sprite):
         pyg.sprite.Sprite.__init__(self)
         self.image = pyg.image.load('Game/Animation/assets/images/pick.png')
         self.rect = self.image.get_rect()
-        self.rect.x = 0
+        self.rect.x = 75
         self.parent_container_height = parent_surface.get_rect().height
         self.rect.y = (self.parent_container_height / 2) - (self.rect.width / 2)
 
@@ -101,29 +101,29 @@ class Note(pyg.sprite.Sprite):
     def __init__(self, parent_surface, note):
         pyg.sprite.Sprite.__init__(self)
         color = (200, 200, 200)
-        radius = 8
+        self.radius = 8
         noir_base_width = 120
         duration = 0.25 if note["duration"] == 0 else note["duration"]
         self.width = 0.95 * duration * noir_base_width if duration >= 4 else duration * noir_base_width
         self.velocity = (duration * noir_base_width / (duration * Notes.noir_duration)) / 30
-        y_padding = 4
+        self.y_padding = 4
         self.parent_container_height = parent_surface.get_rect().height
         self.parent_container_width = parent_surface.get_rect().width
-        height = (self.parent_container_height / helpers.total_nb_notes)
+        self.height = (self.parent_container_height / helpers.total_nb_notes)
         
         self.note_with_octave = note["note"]
 
         x_start_pos = noir_base_width * -4
-        y_pos = self.parent_container_height - (helpers.note_dict[self.note_with_octave] + 1) * height
+        y_pos = self.parent_container_height - (helpers.note_dict[self.note_with_octave] + 1) * self.height
 
-        self.image = pyg.Surface([self.width, height])
+        self.image = pyg.Surface([self.width, self.height])
         self.image.fill(color)
         self.image.set_colorkey(color)
-        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, self.width, height - y_padding], 0, radius)
+        pyg.draw.rect(self.image, (255, 255, 255), [0, 0, self.width, self.height - self.y_padding], 0, self.radius)
         
         self.rect = self.image.get_rect()
 
-        label = helpers.text(helpers.notes_french[helpers.note_dict[self.note_with_octave]] + " " + self.note_with_octave[-1], (0,0,0), (255,255,255), 20)
+        label = helpers.text(helpers.notes_french[helpers.note_dict[self.note_with_octave]], (0,0,0), (255,255,255), 20)
         self.image.blit(label, (5, 0))
 
         self.rect.x = x_start_pos
@@ -156,10 +156,12 @@ class Note(pyg.sprite.Sprite):
                     # print("finished note {} with a hit rate of {}".format(self.note_with_octave, self.note_hite_rate))
                     # print(Note.logic.log_score())
                     if self.note_hite_rate > 0.5:
-                        self.image.fill((0,200,0))
+                        color = (0,200,0)
+                        pyg.draw.rect(self.image, color, [0, 0, self.width, self.height - self.y_padding], 0, self.radius)
                         Note.logic.hit_note()
                     else:
-                        self.image.fill((200,0,0))
+                        color = (200,0,0)
+                        pyg.draw.rect(self.image, color, [0, 0, self.width, self.height - self.y_padding], 0, self.radius)
                         Note.logic.missed_note()
                     self.finished_note = True
                     
@@ -177,7 +179,8 @@ class NoteDecoration(pyg.sprite.Sprite):
         # self.image.fill(self.color)
         # self.image.set_colorkey(self.color)
 
-        label = helpers.text(note[0], (150,150,150), self.color, 25)
+        label = helpers.text(helpers.notes_french[helpers.note_dict[note[0]]], (150,150,150), self.color, 25)
+        octave = helpers.text(note[0][-1], (150,150,150), self.color, 25)
         
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -185,4 +188,5 @@ class NoteDecoration(pyg.sprite.Sprite):
         # print(index, ( self.rect.x, self.rect.y, width, height))
 
         pyg.draw.rect(self.image, self.color, [0, 0, width, height + 1])
-        self.image.blit(label, (20, 5))
+        self.image.blit(label, (width - animation.Animation.indicator_container_width + 10, 2))
+        self.image.blit(octave, (width - octave.get_rect().width - 5, 2))
