@@ -54,6 +54,7 @@ class Notes():
                 # print(note)
                 self.note_list.append(note)
 
+        self.note_sprite_list = [None] * len(self.note_list)
 
         self.nb_measures_in_surface = 4
         self.note_index = 0
@@ -76,7 +77,11 @@ class Notes():
                 self.next_note_duration = self.note_list[self.note_index + 1]["duration"] * Notes.noir_duration
             self.note_index += 1
         else:
-            self.notes.add(Note(self.notes_container,self.note_list[self.note_index]))
+            note_sprite = Note(self.notes_container,self.note_list[self.note_index], True)
+            self.note_sprite_list[self.note_index] = note_sprite
+            self.notes.add(note_sprite)
+            if self.note_index > 0:
+                self.note_sprite_list[self.note_index - 1].is_last_note = False
             if self.note_index != len(self.note_list) - 1:
                 self.next_note_duration = self.note_list[self.note_index + 1]["duration"] * Notes.noir_duration
             self.note_index += 1
@@ -98,8 +103,9 @@ class Notes():
 class Note(pyg.sprite.Sprite):
     logic = logic.Logic.get_instance()
     # print(logic)
-    def __init__(self, parent_surface, note):
+    def __init__(self, parent_surface, note, is_last_note):
         pyg.sprite.Sprite.__init__(self)
+        self.is_last_note = is_last_note
         color = (200, 200, 200)
         self.radius = 8
         noir_base_width = 120
@@ -140,6 +146,10 @@ class Note(pyg.sprite.Sprite):
     
     def update(self, played_note):
         self.rect.move_ip([self.velocity, 0])
+
+        if self.is_last_note:
+            if self.rect.x > self.parent_container_width:
+                Note.logic.finished_score()
 
         if self.rect.x + self.width > self.parent_container_width - animation.Animation.indicator_container_width:
             if self.rect.x < self.parent_container_width - animation.Animation.indicator_container_width:

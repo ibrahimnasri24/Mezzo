@@ -29,7 +29,8 @@ class Logic:
         self.drawable_notes = sprites.Notes(notes_container, self.notes)
         self.state = "game-loop"
         
-
+    def finished_score(self):
+        self.state = "finished"
     
     def update_accuracy(self):
         self.played_notes += 1

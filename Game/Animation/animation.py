@@ -66,6 +66,15 @@ class Animation:
         gameover_rect = gameover.get_rect()
         self.screen.blit(gameover, ((self.width / 2) - (gameover_rect.width / 2), (self.height / 2) - (gameover_rect.height / 2)))
 
+    def draw_finish_screen(self):
+        succes = helpers.text('Success!', helpers.colors["text1"], helpers.colors["background1"], 64)
+        succes_rect = succes.get_rect()
+        acc = helpers.text('Finished the with {0:.3g}% accuracy'.format(self.logic.accuracy), helpers.colors["text1"], helpers.colors["background1"], 55)
+        acc_rect = acc.get_rect()
+        self.screen.blit(succes, ((self.width / 2) - (succes_rect.width / 2), succes_rect.height))
+        self.screen.blit(acc, ((self.width / 2) - (acc_rect.width / 2), 2 * succes_rect.height))
+
+
     
     def draw_currently_played_note(self):
         cur_played_note_text = helpers.text("Played Note: " + helpers.notes_french[helpers.note_dict[helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges)]], helpers.colors["text1"], helpers.colors["background1"], 32)
@@ -93,13 +102,14 @@ class Animation:
                         self.p2.join()
                         running = False
                         pyg.QUIT: sys.exit()
-                    elif event.key == pyg.K_ESCAPE:
+                    elif event.key == pyg.K_ESCAPE or self.logic.gameover:
                         self.logic.reset()
                         scale = 0
                         self.logic.state = "main-menu"
-                    elif self.logic.gameover:
-                        self.logic.reset()
-                        self.logic.state = "main-menu"
+                    # elif event.key == pyg.K_r:
+                    #     self.logic.reset()
+                    #     scale = 0
+                    #     self.logic.state = "game-loop"
 
             # self.screen.fill((50,50,50))
 
@@ -136,6 +146,10 @@ class Animation:
                 else:
                     scale = 0.8
                 self.menu.draw_main_menu(mouse_coordinates[0], mouse_coordinates[1], scale)
+            
+            if  self.logic.state == "finished":
+                self.draw_finish_screen()
+
 
             pyg.display.update()
             self.FPSCLOCK.tick(30)
