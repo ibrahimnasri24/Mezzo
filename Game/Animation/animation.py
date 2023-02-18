@@ -44,7 +44,7 @@ class Animation:
 
     def draw_score(self):
         accuracy = helpers.text('Accuracy: {0:.3g}%'.format(self.logic.accuracy), helpers.colors["text1"], helpers.colors["background1"], 32)
-        self.screen.blit(accuracy, (150, 38))
+        self.screen.blit(accuracy, (50, 30))
 
 
 
@@ -68,15 +68,17 @@ class Animation:
 
     
     def draw_currently_played_note(self):
-        cur_played_note_text = helpers.text("Played Note: " + helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges), helpers.colors["text1"], helpers.colors["background1"], 32)
+        cur_played_note_text = helpers.text("Played Note: " + helpers.notes_french[helpers.note_dict[helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges)]], helpers.colors["text1"], helpers.colors["background1"], 32)
         # cur_played_note_text_rect = cur_played_note_text.get_rect()
-        self.screen.blit(cur_played_note_text, (440,38))
+        self.screen.blit(cur_played_note_text, (340,30))
     
 
     def main_loop(self):
         self.note_ranges = helpers.initialize_note_ranges()
 
         running = True
+
+        scale = 0
 
         while running:
             # print(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
@@ -93,6 +95,7 @@ class Animation:
                         pyg.QUIT: sys.exit()
                     elif event.key == pyg.K_ESCAPE:
                         self.logic.reset()
+                        scale = 0
                         self.logic.state = "main-menu"
                     elif self.logic.gameover:
                         self.logic.reset()
@@ -110,6 +113,7 @@ class Animation:
                 self.screen.blit(self.note_decorations_container, (0,0))
                 
                 if self.logic.state == "game-loop": 
+                    scale = 0
                     self.logic.drawable_notes.notes_container.fill((0,255,0,0))
                     self.logic.drawable_notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
                     self.logic.drawable_notes.notes.draw(self.notes_container)
@@ -127,7 +131,11 @@ class Animation:
                 
             if self.logic.state == "main-menu":
                 mouse_coordinates = pyg.mouse.get_pos()
-                self.menu.draw_main_menu(mouse_coordinates[0], mouse_coordinates[1])
+                if scale + 0.15 < 0.8:
+                    scale += 0.15
+                else:
+                    scale = 0.8
+                self.menu.draw_main_menu(mouse_coordinates[0], mouse_coordinates[1], scale)
 
             pyg.display.update()
             self.FPSCLOCK.tick(30)

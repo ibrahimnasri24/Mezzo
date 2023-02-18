@@ -50,8 +50,7 @@ class Menu:
         for i, file in enumerate(self.files):
             self.buttons.append(Button(self.menu_container, file, 0, i * button_height + 100, button_width, button_height, self.menu_top_padding, self.menu_left_padding))
 
-    def draw_main_menu(self, mouse_x, mouse_y):
-        scale  = 0.8
+    def draw_main_menu(self, mouse_x, mouse_y, scale):
         GB = min(255, max(0, round(255 * (1-scale))))
         self.screen.fill((0, GB, GB), special_flags = pyg.BLEND_MULT)
 

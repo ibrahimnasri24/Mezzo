@@ -1,7 +1,7 @@
 import os
 import music21 as m21
 
-noir_bpm = 80
+noir_bpm = 100
 
 def xml_to_list(xml):
     xml_data = m21.converter.parse(xml)

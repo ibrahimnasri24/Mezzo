@@ -155,7 +155,7 @@ class Note(pyg.sprite.Sprite):
                     self.note_hite_rate = self.note_hit / self.max_hits_per_note
                     # print("finished note {} with a hit rate of {}".format(self.note_with_octave, self.note_hite_rate))
                     # print(Note.logic.log_score())
-                    if self.note_hite_rate > 0.5:
+                    if self.note_hite_rate > 0.1:
                         color = (0,200,0)
                         pyg.draw.rect(self.image, color, [0, 0, self.width, self.height - self.y_padding], 0, self.radius)
                         Note.logic.hit_note()
