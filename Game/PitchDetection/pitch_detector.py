@@ -35,8 +35,11 @@ def differenceFunction(x, N, tau_max):
 
 
 def cumulativeMeanNormalizedDifferenceFunction(df, N):
-    cmndf = df[1:] * range(1, N) / np.cumsum(df[1:]).astype(float) #scipy method
-    return np.insert(cmndf, 0, 1)
+    try:
+        cmndf = df[1:] * range(1, N) / np.cumsum(df[1:]).astype(float) #scipy method
+        return np.insert(cmndf, 0, 1)
+    except:
+        pass
 
 
 

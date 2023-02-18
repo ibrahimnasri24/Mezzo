@@ -1,10 +1,12 @@
 from Utils import helpers
 from SheetMusic import import_xml
 import pygame as pyg
+from Animation import logic
 
 class Button:
     def __init__(self, parent_surface, file, x, y, width, height, menu_top_padding, menu_left_padding):
         self.label = file["name"]
+        self.path = file["path"]
         self.x = x
         self.y = y
         self.y_rel_to_screen = y + menu_top_padding
@@ -27,7 +29,8 @@ class Button:
         self.parent_surface.blit(self.button_surface, (self.x, self.y))
 
 class Menu:
-    def __init__(self, screen, width, height):
+    def __init__(self, screen, width, height, notes_container):
+        self.notes_container = notes_container
         self.screen = screen
         self.screen_width = width
         self.screen_height = height
@@ -37,6 +40,8 @@ class Menu:
         self.height = 700
         self.menu_container = pyg.Surface((self.width,self.height), pyg.SRCALPHA, 32)
         self.files = import_xml.get_files_from_sheets_directory()
+
+        self.logic = logic.Logic.get_instance()
         
         self.buttons = []
         button_width = self.width
@@ -44,11 +49,6 @@ class Menu:
 
         for i, file in enumerate(self.files):
             self.buttons.append(Button(self.menu_container, file, 0, i * button_height + 100, button_width, button_height, self.menu_top_padding, self.menu_left_padding))
-
-
-    def draw_file_picker(self):
-        pass
-
 
     def draw_main_menu(self, mouse_x, mouse_y):
         scale  = 0.8
@@ -66,5 +66,4 @@ class Menu:
     def click_handler(self, mouse_coordinates):
         for button in self.buttons:
             if mouse_coordinates[0] > button.x_rel_to_screen and mouse_coordinates[0] < button.x_rel_to_screen + button.width and mouse_coordinates[1] > button.y_rel_to_screen and mouse_coordinates[1] < button.y_rel_to_screen + button.height:
-                print(button.label)
-            
+                self.logic.select_sheet(button.path, self.notes_container)

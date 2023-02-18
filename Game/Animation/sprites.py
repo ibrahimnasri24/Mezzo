@@ -34,9 +34,7 @@ class PitchIndicator(pyg.sprite.Sprite):
 
 class Notes():
     noir_duration = 60 / import_xml.noir_bpm
-    def __init__(self, notes_container):
-        notes = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Farewell_Of_Slavianka-Baritone.xml")
-        
+    def __init__(self, notes_container, notes):
         self.note_list = []
         start = 0
         cum_dur = 0

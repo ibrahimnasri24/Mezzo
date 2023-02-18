@@ -38,7 +38,7 @@ class Animation:
         self.pitch = [0]
 
         self.logic = logic.Logic.get_instance()
-        self.menu = menu.Menu(self.screen, self.width,self.height)
+        self.menu = menu.Menu(self.screen, self.width,self.height, self.notes_container)
 
 
     def draw_score(self):
@@ -75,8 +75,6 @@ class Animation:
     def main_loop(self):
         self.note_ranges = helpers.initialize_note_ranges()
 
-        notes = sprites.Notes(self.notes_container)
-
         running = True
 
         while running:
@@ -86,16 +84,18 @@ class Animation:
                 if event.type == pyg.MOUSEBUTTONUP:
                     self.menu.click_handler(pyg.mouse.get_pos())
                 if event.type == pyg.KEYDOWN:
-                    if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
+                    if event.key == pyg.K_q:
                         print("exiting")
                         self.pitch[1] = 0
                         self.p2.join()
                         running = False
                         pyg.QUIT: sys.exit()
+                    elif event.key == pyg.K_ESCAPE:
+                        self.logic.reset()
+                        self.logic.state = "main-menu"
                     elif self.logic.gameover:
                         self.logic.reset()
-                        self.notes_container = pyg.Surface((self.width,self.height), pyg.SRCALPHA, 32)
-                        notes = sprites.Notes(self.notes_container)
+                        self.logic.state = "main-menu"
 
             # self.screen.fill((50,50,50))
 
@@ -108,10 +108,11 @@ class Animation:
                 self.note_decorations.draw(self.note_decorations_container)
                 self.screen.blit(self.note_decorations_container, (0,0))
                 
-                notes.notes_container.fill((0,255,0,0))
-                if self.logic.state == "game-loop": notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
-                notes.notes.draw(self.notes_container)
-                self.screen.blit(self.notes_container, (0, 0))
+                if self.logic.state == "game-loop": 
+                    self.logic.drawable_notes.notes_container.fill((0,255,0,0))
+                    self.logic.drawable_notes.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
+                    self.logic.drawable_notes.notes.draw(self.notes_container)
+                    self.screen.blit(self.notes_container, (0, 0))
 
                 self.indicator_container.fill((255,255,255,50))
                 if self.logic.state == "game-loop": self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))

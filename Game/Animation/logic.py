@@ -1,3 +1,6 @@
+from SheetMusic import import_xml
+from Animation import sprites
+
 class Logic:
     _instance = None
     max_missed_notes = 5
@@ -12,12 +15,21 @@ class Logic:
         if not hasattr(self, "_initialized"):
             self._initialized = True
             self.state = "main-menu"
+            self.notes = []
             self.reset()
 
     @classmethod
     def get_instance(cls):
         Logic()
         return cls._instance
+    
+    
+    def select_sheet(self, file_path, notes_container):
+        self.notes = import_xml.xml_to_list(file_path)
+        self.drawable_notes = sprites.Notes(notes_container, self.notes)
+        self.state = "game-loop"
+        
+
     
     def update_accuracy(self):
         self.played_notes += 1
