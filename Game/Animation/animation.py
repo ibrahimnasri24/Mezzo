@@ -41,7 +41,7 @@ class Animation:
 
     def draw_score(self):
         accuracy = helpers.text('Accuracy: {0:.3g}%'.format(self.logic.accuracy), helpers.colors["text1"], helpers.colors["background1"], 32)
-        self.screen.blit(accuracy, (50, 10))
+        self.screen.blit(accuracy, (150, 38))
 
 
 
@@ -66,8 +66,8 @@ class Animation:
     
     def draw_currently_played_note(self):
         cur_played_note_text = helpers.text("Played Note: " + helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges), helpers.colors["text1"], helpers.colors["background1"], 32)
-        cur_played_note_text_rect = cur_played_note_text.get_rect()
-        self.screen.blit(cur_played_note_text, (340,10))
+        # cur_played_note_text_rect = cur_played_note_text.get_rect()
+        self.screen.blit(cur_played_note_text, (440,38))
 
 
     def main_loop(self):
@@ -110,7 +110,7 @@ class Animation:
                 notes.notes.draw(self.notes_container)
                 self.screen.blit(self.notes_container, (0, 0))
 
-                self.indicator_container.fill((255,255,255,150))
+                self.indicator_container.fill((255,255,255,50))
                 self.pitch_indicator.update(helpers.extract_note_from_pitch(self.pitch[0], self.note_ranges))
                 self.pitch_indicators.draw(self.indicator_container)
                 self.screen.blit(self.indicator_container, (self.width - Animation.indicator_container_width, 0))

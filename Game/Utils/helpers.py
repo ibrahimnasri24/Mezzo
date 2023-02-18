@@ -118,5 +118,5 @@ def extract_note_from_pitch(pitch, note_ranges):
 
 def text(string, color, bgcolor, size):
     font = pyg.font.Font('Game/Animation/assets/fonts/Roboto-Black.ttf',size)
-    text = font.render(string, True, color, bgcolor)
+    text = font.render(string, True, color)
     return text
