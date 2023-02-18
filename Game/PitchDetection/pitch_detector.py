@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import fftconvolve
 from os import sep
-import time
 import pyaudio
 
 F0_MIN = 75

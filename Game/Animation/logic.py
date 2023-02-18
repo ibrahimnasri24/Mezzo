@@ -11,6 +11,7 @@ class Logic:
     def __init__(self):
         if not hasattr(self, "_initialized"):
             self._initialized = True
+            self.state = "main-menu"
             self.reset()
 
     @classmethod

@@ -1,3 +1,4 @@
+import os
 import music21 as m21
 
 noir_bpm = 80
@@ -26,3 +27,15 @@ def xml_to_list(xml):
     # for note in score:
     #     print(note)
     return score
+
+def get_files_from_sheets_directory():
+    sheets_dir = "Game/SheetMusic/SheetMusic"
+    files = []
+
+    for filename in os.listdir(sheets_dir):
+        f = os.path.join(sheets_dir, filename)
+        if os.path.isfile(f):
+            if filename[-4:len(filename)] == ".xml":
+                files.append({"path":f, "name":filename[0:-4]})
+
+    return files

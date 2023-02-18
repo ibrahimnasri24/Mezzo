@@ -40,6 +40,38 @@ notes=[
     ("A-4",   401),
 ]
 
+notes_french={
+    0:   "Mi",
+    1:   "Fa",
+    2:   "Fa♯",
+    3:   "Sol",
+    4:  "La♭",
+    5:   "La",
+    6:  "Ci♭",
+    7:   "Ci",
+    8:   "Do",
+    9:   "Do♯",
+    10:   "Re",
+    11:  "Mi♭",
+    12:   "Mi",
+    13:   "Fa",
+    14:  "Fa♯",
+    15:   "Sol",
+    16:  "La♭",
+    17:   "La",
+    18:  "Ci♭",
+    19:   "Ci",
+    20:   "Do",
+    21:  "Do♯",
+    22:   "Re",
+    23:  "Mi♭",
+    24:   "Mi",
+    25:   "Fa",
+    26:  "Fa♯",
+    27:   "Sol",
+    28:  "La♭",
+}
+
 total_nb_notes = 29
 
 note_dict = {
@@ -74,7 +106,7 @@ note_dict = {
     "A#3":   18,
     "B-3":   18,
     "B3":    19,
-    "B#4":    20,
+    "B#4":   20,
     "C4":    20,
     "C#4":   21,
     "D-4":   21,
@@ -117,6 +149,6 @@ def extract_note_from_pitch(pitch, note_ranges):
 
 
 def text(string, color, bgcolor, size):
-    font = pyg.font.Font('Game/Animation/assets/fonts/Roboto-Black.ttf',size)
+    font = pyg.font.Font('Game/Animation/assets/fonts/seguisym.ttf',size)
     text = font.render(string, True, color)
     return text

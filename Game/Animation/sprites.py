@@ -35,7 +35,7 @@ class PitchIndicator(pyg.sprite.Sprite):
 class Notes():
     noir_duration = 60 / import_xml.noir_bpm
     def __init__(self, notes_container):
-        notes = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Mawtini_(trmb.).xml")
+        notes = import_xml.xml_to_list("Game/SheetMusic/TestSheets/Farewell_Of_Slavianka-Baritone.xml")
         
         self.note_list = []
         start = 0
@@ -125,7 +125,7 @@ class Note(pyg.sprite.Sprite):
         
         self.rect = self.image.get_rect()
 
-        label = helpers.text(self.note_with_octave, (0,0,0), (255,255,255), 28)
+        label = helpers.text(helpers.notes_french[helpers.note_dict[self.note_with_octave]] + " " + self.note_with_octave[-1], (0,0,0), (255,255,255), 20)
         self.image.blit(label, (5, 0))
 
         self.rect.x = x_start_pos
