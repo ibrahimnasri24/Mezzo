@@ -80,10 +80,14 @@ class Notes():
             note_sprite = Note(self.notes_container,self.note_list[self.note_index], True)
             self.note_sprite_list[self.note_index] = note_sprite
             self.notes.add(note_sprite)
-            if self.note_index > 0:
-                self.note_sprite_list[self.note_index - 1].is_last_note = False
-            if self.note_index != len(self.note_list) - 1:
-                self.next_note_duration = self.note_list[self.note_index + 1]["duration"] * Notes.noir_duration
+            back_off = 1
+            while back_off < (len(self.note_list) - 2) and self.note_sprite_list[self.note_index - back_off] == None:
+                back_off += 1
+                
+            if self.note_index > 0 and self.note_sprite_list[self.note_index - back_off] != None:
+                self.note_sprite_list[self.note_index - back_off].is_last_note = False
+                
+            self.next_note_duration = self.note_list[self.note_index + 1]["duration"] * Notes.noir_duration
             self.note_index += 1
             self.last_note_start_time = time.time()
 

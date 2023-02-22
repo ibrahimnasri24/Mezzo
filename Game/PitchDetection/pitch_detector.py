@@ -1,22 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.signal import fftconvolve
 from os import sep
 import pyaudio
 
 F0_MIN = 75
 F0_MAX = 410
-
-
-def differenceFunction_scipy(x, N, tau_max):
-    x = np.array(x, np.float64)
-    w = x.size
-    x_cumsum = np.concatenate((np.array([0]), (x * x).cumsum()))
-    conv = fftconvolve(x, x[::-1])
-    tmp = x_cumsum[w:0:-1] + x_cumsum[w] - x_cumsum[:w] - 2 * conv[w - 1:]
-    return tmp[:tau_max + 1]
-
-
 
 
 def differenceFunction(x, N, tau_max):
