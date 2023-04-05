@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: Mezzo
+  annotations:
+    github.com/project-slug: ibrahimnasri24/Mezzo
+spec:
+  type: other
+  lifecycle: unknown
+  owner: ibrahim
